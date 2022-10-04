@@ -17,4 +17,39 @@ class Map:
         self.map=[]
         for i in range(col*row):
             self.map.append(random.randint(1,objs))
-        print(self.map)
+            
+    # fill index with random number
+    def fill(self,index):
+        self.map[index]=random.randint(1,objs)
+        
+    # use the value above to cover value in index  
+    def remove(self,index):
+        if(index<col):
+            self.fill(index)
+            return
+        self.map[index]=self.map[index-col]
+        self.remove(index-col)
+        
+    
+    def reduce(self):
+        # from top left to right
+        for i in range(row*col):
+            # check left
+            if ((i%row)<col-2 
+                and self.map[i+1]==self.map[i] 
+                and self.map[i+2]==self.map[i]):
+                self.remove(i)
+                self.remove(i+1)
+                self.remove(i+2)
+                return True
+            # check down
+            if(i<(row-2)*col 
+               and self.map[i+col]==self.map[i] 
+               and self.map[i+2*col]==self.map[i]):
+                self.remove(i)
+                self.remove(i+col)
+                self.remove(i+2*col)
+                return True
+        return False
+            
+            
