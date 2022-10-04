@@ -41,6 +41,7 @@ class Map:
                 self.remove(i)
                 self.remove(i+1)
                 self.remove(i+2)
+                self.score+=1
                 return True
             # check down
             if(i<(row-2)*col 
@@ -49,6 +50,7 @@ class Map:
                 self.remove(i)
                 self.remove(i+col)
                 self.remove(i+2*col)
+                self.score+=1
                 return True
         return False
             
