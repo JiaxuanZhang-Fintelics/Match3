@@ -42,25 +42,35 @@ class Map:
     
     def reduce(self):
         # from top left to right
-        for i in range(row*col):
+        for i in range(row * col):
             # check left
-            if ((i%row)<col-2 
-                and self.map[i+1]==self.map[i] 
-                and self.map[i+2]==self.map[i]):
-                self.remove(i)
-                self.remove(i+1)
-                self.remove(i+2)
-                self.score+=1
+            if ((i % row) < col - 2
+                    and self.map[i + 1] == self.map[i]
+                    and self.map[i + 2] == self.map[i]):
+                target = self.map[i]
+                offset = 0
+                removeSet = []
+                while self.map[i + offset] == target:
+                    removeSet.append(i+offset)
+                    offset += 1
+                for index in removeSet:
+                    self.remove(index)
+                self.score += 1+(len(removeSet)-3)*1
                 return True
             # check down
-            if(i<(row-2)*col 
-               and self.map[i+col]==self.map[i] 
-               and self.map[i+2*col]==self.map[i]):
-                self.remove(i)
-                self.remove(i+col)
-                self.remove(i+2*col)
-                self.score+=1
-                return True
+            if (i < (row - 2) * col
+                    and self.map[i + col] == self.map[i]
+                    and self.map[i + 2 * col] == self.map[i]):
+                target = self.map[i]
+                offset = 0
+                removeSet = []
+                while self.map[i + offset] == target:
+                    removeSet.append(i+offset)
+                    offset += col
+                for index in removeSet:
+                    self.remove(index)
+                self.score += 1+(len(removeSet)-3)*1
+                return True                
         return False
     
     # keep reducing untill no match objects exist
