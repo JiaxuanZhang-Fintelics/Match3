@@ -21,12 +21,14 @@ class Map:
         self.score=0
         
         self.pool=init_pool
-        # generate objects in pool
-        for i in range(pool_size*row*col*3):
-            for j in range(objs):
-                self.pool.append(j+1)
-        # randomize the pool
-        random.shuffle(self.pool)
+        # only set randomized pool if not specified
+        if len(init_pool)==0:
+            # generate objects in pool
+            for i in range(pool_size*row*col*3):
+                for j in range(objs):
+                    self.pool.append(j+1)
+            # randomize the pool
+            random.shuffle(self.pool)
         
         self.map=[]
         # Generate random int in grids from pool
