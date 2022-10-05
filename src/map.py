@@ -11,18 +11,18 @@ import random
 class Map:
     
     # Constructor, generate random int in every grid and reduce
-    def __init__(self,col=5,row=5,objs=4,pool=3):
+    def __init__(self,col,row,objs,pool_size,init_pool):
         
         # Initialization
         self.col=col # number of columns
         self.row=row # number of rows
         self.objs=objs # number of kinds of objects in grid 
-        self.pool_size=pool # size of pool=pool_size*col*row*objs*3
+        self.pool_size=pool_size # size of pool=pool_size*col*row*objs*3
         self.score=0
         
-        self.pool=[]
+        self.pool=init_pool
         # generate objects in pool
-        for i in range(pool*row*col*3):
+        for i in range(pool_size*row*col*3):
             for j in range(objs):
                 self.pool.append(j+1)
         # randomize the pool

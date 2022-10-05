@@ -10,8 +10,8 @@ from solver import solve
 
 class controller:
     # initialize map
-    def __init__(self,col,row,objs,pool):
-       self.Map=map.Map(col,row,objs,pool)
+    def __init__(self,col=5,row=5,objs=4,pool=10,init_pool=[]):
+       self.Map=map.Map(col,row,objs,pool,init_pool)
        
     #  start solving
     def start(self):
