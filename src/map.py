@@ -34,7 +34,11 @@ class Map:
             self.map.append(self.pool.pop(0))
         # Reduce
         self.reduce_all()
-        # Reset score
+        # Fill the pool and reset score
+        for i in range(self.score):
+            obj=random.randint(1, objs)
+            for j in range(3):
+                self.pool.append(obj)
         self.score=0
             
     # fill index with object in the pool

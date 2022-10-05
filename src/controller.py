@@ -8,23 +8,28 @@ import map
 import renderer
 from solver import solve 
 
-# generate map and start solving
-def start(col,row,objs,pool):
-    m=map.Map(col,row,objs,pool)
-    print("initial:")
-    renderer.render(m)
-    while(m.reduce()):
-        print("reduce:")
-        #renderer.render(m)
-    while(solve(m)):
-        print("solve:")
-        #renderer.render(m)
-        while(m.reduce()):
+class controller:
+    # initialize map
+    def __init__(self,col,row,objs,pool):
+       self.Map=map.Map(col,row,objs,pool)
+       
+    #  start solving
+    def start(self):
+        print("initial:")
+        renderer.render(self.Map)
+        while(self.Map.reduce()):
             print("reduce:")
-            #renderer.render(m)
-    print("Score:")
-    renderer.displayScore(m)
-    renderer.render(m)
+            #renderer.render(self.Map)
+        while(solve(self.Map)):
+            print("solve:")
+            #renderer.render(self.Map)
+            while(self.Map.reduce()):
+                print("reduce:")
+                #renderer.render(self.Map)
+        print("Score:")
+        renderer.displayScore(self.Map)
+        renderer.render(self.Map)
 
 if __name__ == "__main__":
-    start(10,10,4,10)
+   c=controller(10,10,4,10)
+   c.start()
