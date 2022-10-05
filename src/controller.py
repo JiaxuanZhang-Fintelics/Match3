@@ -9,21 +9,22 @@ import renderer
 from solver import solve 
 
 # generate map and start solving
-def start():
-    m=map.Map()
+def start(col,row,objs,pool):
+    m=map.Map(col,row,objs,pool)
     print("initial:")
     renderer.render(m)
     while(m.reduce()):
         print("reduce:")
-        renderer.render(m)
+        #renderer.render(m)
     while(solve(m)):
         print("solve:")
-        renderer.render(m)
+        #renderer.render(m)
         while(m.reduce()):
             print("reduce:")
-            renderer.render(m)
+            #renderer.render(m)
     print("Score:")
     renderer.displayScore(m)
+    renderer.render(m)
 
 if __name__ == "__main__":
-    start()
+    start(10,10,4,10)
