@@ -7,22 +7,31 @@ Created on Tue Oct  4 10:57:02 2022
 
 import random 
 
-col=5
-row=5
-objs=4
+col=5 # number of columns
+row=5 # number of rows
+objs=4 # number of kinds of objects in grid 
+
 
 class Map:
+    
+    # Constructor, generate random int in every grid and reduce
     def __init__(self):
+        # Initialization
         self.score=0
         self.map=[]
+        # Generate random int in grids
         for i in range(col*row):
             self.map.append(random.randint(1,objs))
+        # Reduce
+        self.reduce_all()
+        # Reset score
+        self.score=0
             
     # fill index with random number
     def fill(self,index):
         self.map[index]=random.randint(1,objs)
         
-    # use the value above to cover value in index  
+    # use the value above to cover value in index recursively 
     def remove(self,index):
         if(index<col):
             self.fill(index)
@@ -54,10 +63,10 @@ class Map:
                 return True
         return False
     
+    # keep reducing untill no match objects exist
     def reduce_all(self):
         while(self.reduce()):
-            print("reduce:")
-        return True
+            pass
 
             
             
