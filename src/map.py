@@ -53,5 +53,11 @@ class Map:
                 self.score+=1
                 return True
         return False
+    
+    def reduce_all(self):
+        while(self.reduce()):
+            print("reduce:")
+        return True
+
             
             
