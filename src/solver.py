@@ -7,7 +7,7 @@ Created on Tue Oct  4 12:38:07 2022
 
 
 # change objects in grid i and j 
-def flip(Map,i,j):
+def swap(Map,i,j):
     if(Map.map[i]==0 or Map.map[j]==0):
         return 
     temp=Map.map[i]
@@ -66,40 +66,40 @@ def solve(Map):
     # start from top left
     for i in range(Map.row*Map.col):
         
-        # flip to left
+        # swap to left
         if(i%Map.col>0):
-           flip(Map,i,i-1) 
+           swap(Map,i,i-1) 
            if(isSolved(Map, i)):
                print("left",int(i/Map.col),i%Map.col)
                return True
-           # if not solve, reset flip
-           flip(Map,i,i-1) 
+           # if not solve, reset swap
+           swap(Map,i,i-1) 
            
-        #flip to right
+        #swap to right
         if(i%Map.col<(Map.col-1)):
-            flip(Map,i,i+1) 
+            swap(Map,i,i+1) 
             if(isSolved(Map, i)):
                 print("right",int(i/Map.col),i%Map.col)
                 return True
-            # if not solve, reset flip
-            flip(Map,i,i+1) 
+            # if not solve, reset swap
+            swap(Map,i,i+1) 
             
-        #flip up
+        #swap up
         if(i>Map.col):
-            flip(Map,i,i-Map.col) 
+            swap(Map,i,i-Map.col) 
             if(isSolved(Map, i)):
                 print("up",int(i/Map.col),i%Map.col)
                 return True
-            # if not solve, reset flip
-            flip(Map,i,i-Map.col) 
+            # if not solve, reset swap
+            swap(Map,i,i-Map.col) 
             
-        #flip down
+        #swap down
         if(i<(Map.row-1)*Map.col):
-            flip(Map,i,i+Map.col) 
+            swap(Map,i,i+Map.col) 
             if(isSolved(Map, i)):
                 print("down",int(i/Map.col),i%Map.col)
                 return True
-            # if not solve, reset flip
-            flip(Map,i,i+Map.col) 
+            # if not solve, reset swap
+            swap(Map,i,i+Map.col) 
             
     return False

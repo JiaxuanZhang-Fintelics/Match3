@@ -19,12 +19,12 @@ class Map:
         self.objs=objs # number of kinds of objects in grid 
         self.pool_size=pool_size # size of pool=pool_size*col*row*objs*3
         self.score=0
-        
+        self.obj_count=0
         self.pool=init_pool
         # only set randomized pool if not specified
         if len(init_pool)==0:
             # generate objects in pool
-            for i in range(pool_size*row*col*3):
+            for i in range(pool_size*3):
                 for j in range(objs):
                     self.pool.append(j+1)
             # randomize the pool
@@ -34,13 +34,10 @@ class Map:
         # Generate random int in grids from pool
         for i in range(col*row):
             self.map.append(self.pool.pop(0))
+                
         # Reduce
-        self.reduce_all()
+        self.reduce_and_fill_pool()
         # Fill the pool and reset score
-        for i in range(self.score):
-            obj=random.randint(1, objs)
-            for j in range(3):
-                self.pool.append(obj)
         self.score=0
             
     # fill index with object in the pool
@@ -85,9 +82,20 @@ class Map:
         return False
     
     # keep reducing untill no match objects exist
-    def reduce_all(self):
+    def reduce_and_fill_pool(self):
         while(self.reduce()):
-            pass
+            for j in range(3):
+                self.pool.append(self.obj_count%3+1)
+                self.obj_count+=1
+            random.shuffle(self.pool)
+        
+    # count not empty gird
+    def remain(self):
+        count=0
+        for i in range(self.col*self.row):
+            if self.map[i]!=0:
+                count+=1
+        return count
 
             
             
