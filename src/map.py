@@ -8,10 +8,23 @@ Created on Tue Oct  4 10:57:02 2022
 import random 
 
 
+# return true if 2 is better than 1
+def compare_reduce(vlen1,hlen1,vlen2,hlen2):
+    if(vlen1>1 and hlen1>1 and 
+        vlen2>1 and hlen2>1 and
+        (vlen1+hlen1)<(vlen2+hlen2)):
+        return True
+    elif(vlen2>1 and hlen2>1 and
+          max(vlen1,hlen1)<(vlen2+hlen2)): 
+        return True
+    elif max(vlen1,hlen1) < max(vlen2,hlen2):
+        return True
+    return False
+
 class Map:
     
     # Constructor, generate random int in every grid and reduce
-    def __init__(self,col,row,objs,pool_size,init_pool):
+    def __init__(self,col,row,objs,pool_size,init_pool,mode):
         
         # Initialization
         self.col=col # number of columns
@@ -21,12 +34,17 @@ class Map:
         self.score=0
         self.obj_count=0
         self.pool=init_pool
+        self.mode=mode
         # only set randomized pool if not specified
         if len(init_pool)==0:
             # generate objects in pool
-            for i in range(pool_size*3):
-                for j in range(objs):
-                    self.pool.append(j+1)
+            if(mode=="3"):
+                for i in range(pool_size*3):
+                    for j in range(objs):
+                        self.pool.append(j+1)
+            if(mode=="random"):
+                for i in range(pool_size*3*objs):
+                    self.pool.append(random.randint(1, objs))
             # randomize the pool
             random.shuffle(self.pool)
         
@@ -46,6 +64,7 @@ class Map:
             self.map[index]=0
         else:
             self.map[index]=self.pool.pop(0)
+        self.score+=1
         
     # use the value above to cover value in index recursively 
     def remove(self,index):
@@ -54,40 +73,94 @@ class Map:
             return
         self.map[index]=self.map[index-self.col]
         self.remove(index-self.col)
-        
     
+    def find_up(self,i,v):
+        if (i<0): return
+        if(i>self.col*self.row): return
+        if(self.map[i]==0): return
+        #find up
+        if(i>=self.col and self.map[i]==self.map[i-self.col]):
+           v.append(i-self.col)
+           self.find_up(i-self.col,v)
+        
+    def find_down(self,i,v):
+        if (i<0): return
+        if(i>self.col*self.row): return
+        if(self.map[i]==0): return
+        #find down
+        if(i/self.col<(self.row-1) and self.map[i]==self.map[i+self.col]):
+           v.append(i+self.col)
+           self.find_down(i+self.col,v)
+
+    def find_left(self,i,h):
+        if (i<0): return
+        if(i>self.col*self.row): return
+        if(self.map[i]==0): return
+        #find left
+        if(i%self.col>0 and self.map[i]==self.map[i-1]):
+           h.append(i-1)
+           self.find_left(i-1,h)
+         
+    def find_right(self,i,h):
+        if (i<0): return
+        if(i>self.col*self.row): return
+        if(self.map[i]==0): return
+        #find right
+        if(i%self.col<self.col-1 and self.map[i]==self.map[i+1]):
+           h.append(i+1)
+           self.find_right(i+1,h)
+    
+    # helper function: find vertical and horizontal indexs with same object at index
+    def find_around(self,i,v,h):
+        self.find_up(i,v)
+        self.find_down(i,v)
+        self.find_left(i,h)
+        self.find_right(i,h)
+        
+    def reduce_around(self,i,v,h):
+        reduced=False
+        if(len(h)>1):
+            for index in h:
+                self.remove(index)
+            reduced=True
+            if(len(v)<2): 
+                self.remove(i)
+        if(len(v)>1):
+            v.append(i)
+            v.sort()
+            for index in v:
+                self.remove(index)
+            reduced=True   
+
+        return reduced
+
     def reduce(self):
+        max_index=0  
         # from top left to right
+        vmax=[]
+        hmax=[]
         for i in range(self.row*self.col):
-            # check left
-            if ((i%self.col)<self.col-2
-                and self.map[i]!=0
-                and self.map[i+1]==self.map[i] 
-                and self.map[i+2]==self.map[i]):
-                self.remove(i)
-                self.remove(i+1)
-                self.remove(i+2)
-                self.score+=1
-                return True
-            # check down
-            if(i<(self.row-2)*self.col 
-               and self.map[i]!=0
-               and self.map[i+self.col]==self.map[i] 
-               and self.map[i+2*self.col]==self.map[i]):
-                self.remove(i)
-                self.remove(i+self.col)
-                self.remove(i+2*self.col)
-                self.score+=1
-                return True
-        return False
+            v=[]
+            h=[]
+            self.find_around(i,v,h)
+            if compare_reduce(len(vmax),len(hmax),len(v),len(h)):
+                max_index=i
+                vmax=v
+                hmax=h
+        return self.reduce_around(max_index,vmax,hmax)
     
     # keep reducing untill no match objects exist
     def reduce_and_fill_pool(self):
         while(self.reduce()):
-            for j in range(3):
-                self.pool.append(self.obj_count%3+1)
-                self.obj_count+=1
-            random.shuffle(self.pool)
+            if(self.mode=="3"):
+                for j in range(self.score):
+                    self.pool.append(self.obj_count%3+1)
+                    self.obj_count+=1
+                random.shuffle(self.pool)
+            if(self.mode=="random"):
+                for j in range(self.score):
+                    self.pool.append(random.randint(1, self.objs))
+            self.score=0
         
     # count not empty gird
     def remain(self):
