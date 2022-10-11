@@ -16,7 +16,7 @@ def swap(Map,i,j):
 
 
 
-# for each grid, flip the objects with adjacent grids and check whether it is solved
+# for each grid, swap the objects with adjacent objects and find the best swap
 def solve(Map):
     vmax=[]
     hmax=[]
